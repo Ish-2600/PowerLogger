@@ -48,4 +48,4 @@ The second command checks the supplied datasets and refreshes `reports/input-aud
 
 ## Local and private files
 
-`.gitignore` excludes private files, local secret files, `.venv/`, `.pio/` and build artifacts. No `.env` or `.env.example` is needed. The original PDF is preserved in `private/references/` and excluded from future tracking; it remains in earlier Git history.
+`.gitignore` excludes private files, local secret files, `.venv/`, `.pio/` and build artifacts.
