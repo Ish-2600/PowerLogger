@@ -1,80 +1,51 @@
-<div align="center">
+# Formula SAE Power Logger
 
-# ⚡ Formula SAE Power Logger
+ESP32 DC voltage, current and power logging for the battery and rectifier.
 
-### DC power telemetry for the battery and rectifier
+**Progress:** Stage 1 (audit and design specification) is complete and independently reviewed. Firmware implementation, PCB design and enclosure models are the next stages. Work proceeds one stage at a time.
 
-![Project stage](https://img.shields.io/badge/stage-foundation-0f766e?style=for-the-badge)
-![Language](https://img.shields.io/badge/language-C%2B%2B17-1f6feb?style=for-the-badge)
-![Focus](https://img.shields.io/badge/focus-data_acquisition-f59e0b?style=for-the-badge)
+Start with the [design specification](docs/STAGE_1_DESIGN.md), [delivery stages](docs/STAGES.md) and [independent review](reports/stage-1-review.md).
 
-</div>
-
-> **Mission:** build the software foundation for a PCB-based logger that captures vehicle DC voltage and high-current measurements, then derives real-time power consumption.
-
----
-
-## 🏎️ Why it matters
-
-Battery and rectifier measurements reveal what the vehicle is consuming during startup, idle, and dynamic powertrain operation. The project brief identifies a typical idle draw of roughly **16–22 A**, startup draw around **80–120 A**, and peaks approaching **160 A**. Capturing these signals makes system behavior measurable instead of assumed.
-
-| Signal | Measurement path | Result |
-| :--- | :--- | :--- |
-| **Voltage** | Battery / rectifier DC bus | `voltage_v` |
-| **Current** | Ammeter shunt | `current_a` |
-| **Power** | \( P = V \times I \) | `power_w` |
-
-## 📊 Data contract
-
-The supplied test set contains **1,000 samples** recorded at 250 ms intervals. Its columns are intentionally unit-bearing so that logs stay unambiguous across firmware, desktop tools, and analysis scripts.
-
-```csv
-time_ms,voltage_v,current_a,power_w
-0,12.62,0.18,2.27
-250,12.58,84.70,1065.53
-500,12.41,121.30,1505.33
-```
-
-| Observed test-data range | Value |
-| :--- | ---: |
-| Voltage | 12.08–13.88 V |
-| Current | 0.18–158.40 A |
-| Power | 2.27–1913.47 W |
-
-## 🧩 Project map
+## Folder map
 
 ```text
 PowerLogger_Project/
-├── power_logger.cpp                    # Core C++ data model and P = V × I helper
-├── power_logger_test_data.csv          # Supplied representative measurement data
-└── Electrical Project Power Logger (1).pdf  # Original project brief
+├── README.md                 Project entry point
+├── platformio.ini            Draft ESP32/native build configuration
+├── lib/power_logger/         Existing portable C++ source
+├── src/                      ESP32 application code (planned)
+├── include/                  Shared application headers (planned)
+├── test/                     Unity module tests (planned)
+├── data/
+│   ├── fixtures/             Original power measurement fixture
+│   └── synthetic/            Separate synthetic OBD dataset
+├── docs/
+│   ├── STAGE_1_DESIGN.md      Requirements and proposed architecture
+│   ├── STAGES.md              Delivery progress
+│   └── references/           Original README snapshot
+├── reports/                  Input audit and review results
+├── tools/                    Local validation scripts
+├── hardware/                 PCB files (Stage 3)
+├── models/                   Enclosure models (Stage 4)
+├── private/references/       Original project PDF; ignored by Git
+└── .codex/context/           Project navigation and continuation notes
 ```
 
-The current C++ foundation exposes a `PowerSample` with timestamp, voltage, and current fields, plus a constexpr power calculation. It deliberately has no `main()` yet; the next implementation can target the eventual firmware or a desktop analysis tool without prematurely choosing a platform.
+The original source and datasets were moved without changing their contents. The [original README](docs/references/original-readme.md) is retained as a historical snapshot; its old file paths describe the original layout.
 
-## 🛠️ Quick check
+## Checks available now
 
-Validate the current source without producing an executable:
+Run from this folder:
 
 ```bash
-clang++ -std=c++17 -fsyntax-only power_logger.cpp
+clang++ -std=c++17 -Wall -Wextra -Werror -fsyntax-only lib/power_logger/power_logger.cpp
+python3 tools/audit_inputs.py
 ```
 
-## 🗺️ Roadmap
+The second command checks the supplied datasets and refreshes `reports/input-audit.json`. The power fixture has 1,000 samples; the separate synthetic OBD file has 100,000 rows.
 
-- [x] Define a unit-aware power-sample representation
-- [x] Preserve representative voltage/current/power test data
-- [ ] Define shunt calibration and ADC conversion logic
-- [ ] Add CSV ingestion and validation
-- [ ] Implement logging, fault handling, and hardware-target integration
-- [ ] Compare recorded results with the supplied test data
+`platformio.ini` is a scaffold. There are no implemented ESP32 application or Unity tests yet, so it is not a working firmware build.
 
-## ⚠️ Engineering note
+## Local and private files
 
-This repository is a software starting point, not a validated electrical design. Any implementation connected to the vehicle must be reviewed for sensor range, isolation, fusing, grounding, transient protection, and Formula SAE rules before use.
-
----
-
-<div align="center">
-  <sub>Measure clearly. Diagnose confidently. Drive informed.</sub>
-</div>
+`.gitignore` excludes private files, local secret files, `.venv/`, `.pio/` and build artifacts. No `.env` or `.env.example` is needed. The original PDF is preserved in `private/references/` and excluded from future tracking; it remains in earlier Git history.

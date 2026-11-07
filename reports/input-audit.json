@@ -1,0 +1,53 @@
+{
+  "rows": 1000,
+  "columns": [
+    "time_ms",
+    "voltage_v",
+    "current_a",
+    "power_w"
+  ],
+  "min": {
+    "time_ms": 0.0,
+    "voltage_v": 12.08,
+    "current_a": 0.18,
+    "power_w": 2.27
+  },
+  "max": {
+    "time_ms": 249750.0,
+    "voltage_v": 13.88,
+    "current_a": 158.4,
+    "power_w": 1913.47
+  },
+  "timestamp_steps_ms": [
+    250.0
+  ],
+  "nonfinite_rows": [],
+  "max_power_disagreement_w": 0.0049999999999954525,
+  "power_disagreement_over_0_02_w": 0,
+  "unrelated_synthetic_obd": {
+    "columns": [
+      "record_id",
+      "timestamp_utc",
+      "vehicle_id",
+      "trip_id",
+      "elapsed_seconds",
+      "speed_kmh",
+      "engine_rpm",
+      "coolant_temp_c",
+      "intake_air_temp_c",
+      "throttle_pct",
+      "engine_load_pct",
+      "mass_air_flow_g_s",
+      "intake_pressure_kpa",
+      "fuel_level_pct",
+      "control_module_voltage_v",
+      "short_term_fuel_trim_pct",
+      "long_term_fuel_trim_pct",
+      "simulated_driving_mode",
+      "simulated_condition",
+      "is_synthetic",
+      "simulated_data_issue"
+    ],
+    "rows": 100000
+  }
+}
